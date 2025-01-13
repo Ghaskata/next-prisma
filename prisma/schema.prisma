@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum SocialType {
+  GOOGLE
+  FACEBOOK
+  TWITTER
+}
+
+model User {
+  id         String      @id @default(auto()) @map("_id") @db.ObjectId
+  fname      String
+  lname      String
+  email      String      @unique @db.String
+  password   String
+  isVerify   Boolean     @default(false)
+  profile    String?
+  token2FA   String?
+  google2FA  Boolean     @default(false)
+  email2FA   Boolean     @default(false)
+  socialId   String?
+  socialType SocialType?
+  Token      Token[]
+}
+
+model Token {
+  id     String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId String   @db.ObjectId
+  token  String?
+  otp    String?
+  expiry DateTime
+  user   User     @relation(fields: [userId], references: [id])
+}
