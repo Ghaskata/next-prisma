@@ -45,7 +45,7 @@ export async function handleSignin(values: z.infer<typeof signinSchema>) {
     throw new Error("Invalid credentials. Please try again.");
   }
 
-  const token = generateToken(user);
+  const token = await generateToken(user);
 
   return { message: "You are Login successfully.", token, user };
 }
